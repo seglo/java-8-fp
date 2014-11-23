@@ -5,60 +5,44 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * Created by seglo on 22/11/14.
+ * NameFinder
+ *
+ * Given a path to a text file of names and a list of names, NameFinder will identify all matching names.
+ *
+ * Streams: https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html
+ * Reduction Tutorial: https://docs.oracle.com/javase/tutorial/collections/streams/reduction.html
  */
 public class NameFinder {
-    public class NameConsumer implements Consumer<String> {
-        private int totalNames;
-        private Set<String> inputNames;
-        private Set<String> matchedNames = new HashSet<String>();
-
-        public NameConsumer(HashSet<String> names) {
-            inputNames = names;
-        }
-
-        public void accept(String name) {
-            totalNames++;
-            if (inputNames.contains(name)) {
-                matchedNames.add(name);
-            }
-        }
-
-        public void combine(NameConsumer other) {
-            other.totalNames += totalNames;
-            other.inputNames.addAll(inputNames);
-            other.matchedNames.addAll(matchedNames);
-        }
-    }
-
-    private String _namesPath;
-    private HashSet<String> _names;
-    private NameConsumer nameConsumer;
+    private String namesPath;
+    private HashSet<String> names;
 
     public NameFinder(String namesPath, HashSet<String> names) {
-        _names = names;
-        _namesPath = namesPath;
-        nameConsumer = new NameConsumer(names);
+        this.names = names;
+        this.namesPath = namesPath;
     }
 
-    public void collect() {
+    public NameConsumer collect() throws IOException {
+
+        Stream<String> nameStream;
         try {
-            long totalNames = 0;
-            Set<String> matchedNames = Files.lines(Paths.get(_namesPath), Charset.defaultCharset())
-                    .filter(name -> {
-                        totalNames++;
-                        _names.contains(name);
-                        return _names.contains(name);
-                    })
-                    .collect(Collectors.toSet());
-            System.out.format("There are %d lines in the file", matchedNames.size());
+            nameStream = Files.lines(Paths.get(namesPath), Charset.defaultCharset());
         } catch (IOException e) {
-            System.out.format("could not load file %s", _namesPath);
+            System.out.format("could not load file %s", namesPath);
+            throw e;
         }
+
+        NameConsumer result = nameStream
+                .parallel()
+                .collect(() -> new NameConsumer(names), NameConsumer::accept, NameConsumer::combine);
+
+        prettyPrint(result);
+        return result;
+    }
+
+    private void prettyPrint(NameConsumer consumer) {
+        System.out.format("There were %d matches of %d names in the file", consumer.matchedNames.size(), consumer.totalNames);
     }
 }
