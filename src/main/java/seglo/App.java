@@ -1,11 +1,8 @@
 package seglo;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -25,10 +22,8 @@ public class App {
     }
 
     private static HashSet<String> getNameSet(String[] names) {
-        HashSet<String> nameSet = new HashSet<String>();
-        for (String name : names) {
-            nameSet.add(name);
-        }
+        HashSet<String> nameSet = new HashSet<>();
+        Collections.addAll(nameSet, names);
         return nameSet;
     }
 }

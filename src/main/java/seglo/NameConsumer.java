@@ -13,13 +13,13 @@ import java.util.function.Consumer;
 public class NameConsumer implements Consumer<String> {
     int totalNames;
     Set<String> inputNames;
-    Set<String> matchedNames = new HashSet<String>();
+    Set<String> matchedNames = new HashSet<>();
 
     public NameConsumer(Set<String> inputNames) { this.inputNames = inputNames; }
 
     /**
      * accept accumulates results of the collect operation
-     * @param name
+     * @param name name to match
      */
     public void accept(String name) {
         totalNames++;
@@ -30,7 +30,7 @@ public class NameConsumer implements Consumer<String> {
 
     /**
      * combine is used during parallel operations to combine collected results
-     * @param other
+     * @param other another instance of NameConsumer to combine results into
      */
     public void combine(NameConsumer other) {
         other.totalNames += totalNames;
