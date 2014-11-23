@@ -25,7 +25,6 @@ public class NameFinder {
     }
 
     public NameConsumer collect() throws IOException {
-
         Stream<String> nameStream;
         try {
             nameStream = Files.lines(Paths.get(namesPath), Charset.defaultCharset());
@@ -38,11 +37,21 @@ public class NameFinder {
                 .parallel()
                 .collect(() -> new NameConsumer(names), NameConsumer::accept, NameConsumer::combine);
 
-        prettyPrint(result);
+        printSummary(result);
         return result;
     }
 
-    private void prettyPrint(NameConsumer consumer) {
-        System.out.format("There were %d matches of %d names in the file", consumer.matchedNames.size(), consumer.totalNames);
+    private void printSummary(NameConsumer consumer) {
+        /*
+        Word list searched for is: bob, jane, foo
+        11 words analyzed. 2 matches found:
+
+        foo
+        jane
+         */
+        System.out.format("Word list searched for is: %s\n", String.join(", ", consumer.inputNames));
+        System.out.format("%d words analyzed. %d matches found:\n\n",
+                consumer.matchedNames.size(), consumer.totalNames);
+        consumer.matchedNames.forEach(System.out::println);
     }
 }
