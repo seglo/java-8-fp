@@ -51,7 +51,7 @@ public class NameFinder {
          */
         System.out.format("Word list searched for is: %s\n", String.join(", ", consumer.inputNames));
         System.out.format("%d words analyzed. %d matches found:\n\n",
-                consumer.matchedNames.size(), consumer.totalNames);
+                consumer.totalNames, consumer.matchedNames.size());
         consumer.matchedNames.forEach(System.out::println);
     }
 }
