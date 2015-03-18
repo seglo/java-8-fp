@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Functional Programming (FP) principles in Java 8</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+ <style type="text/css">
+@import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+body {
+  font-family: 'Droid Serif';
+}
+h1, h2, h3 {
+  font-family: 'Yanone Kaffeesatz';
+  font-weight: 400;
+  margin-bottom: 0;
+}
+.remark-slide-content h1 { font-size: 3em; }
+.remark-slide-content h2 { font-size: 2em; }
+.remark-slide-content h3 { font-size: 1.6em; }
+.footnote {
+position: absolute;
+bottom: 3em;
+}
+li p { line-height: 1.25em; }
+.red { color: #fa0000; }
+.large { font-size: 2em; }
+a, a > code {
+color: rgb(249, 38, 114);
+       text-decoration: none;
+}
+code {
+  -moz-border-radius: 5px;
+  -web-border-radius: 5px;
+background: #e7e8e2;
+            border-radius: 5px;
+}
+.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+.remark-code-line-highlighted     { background-color: #373832; }
+.pull-left {
+float: left;
+width: 47%;
+}
+.pull-right {
+float: right;
+width: 47%;
+}
+.pull-right ~ p {
+clear: both;
+}
+#slideshow .slide .content code {
+  font-size: 0.8em;
+}
+#slideshow .slide .content pre code {
+  font-size: 0.9em;
+padding: 15px;
+}
+.inverse {
+background: #272822;
+color: #777872;
+       text-shadow: 0 0 20px #333;
+}
+.inverse h1, .inverse h2 {
+color: #f3f3f3;
+       line-height: 0.8em;
+}
+
+/* Slide-specific styling */
+#slide-inverse .footnote {
+bottom: 12px;
+left: 20px;
+}
+#slide-how .slides {
+  font-size: 0.9em;
+position: absolute;
+top:  151px;
+right: 140px;
+}
+#slide-how .slides h3 {
+  margin-top: 0.2em;
+}
+#slide-how .slides .first, #slide-how .slides .second {
+padding: 1px 20px;
+height: 90px;
+width: 120px;
+       -moz-box-shadow: 0 0 10px #777;
+       -webkit-box-shadow: 0 0 10px #777;
+       box-shadow: 0 0 10px #777;
+}
+#slide-how .slides .first {
+background: #fff;
+position: absolute;
+top: 20%;
+left: 20%;
+      z-index: 1;
+}
+#slide-how .slides .second {
+position: relative;
+background: #fff;
+            z-index: 0;
+}
+
+/* Two-column layout */
+.left-column {
+color: #777;
+width: 20%;
+height: 92%;
+float: left;
+}
+.left-column h2:last-of-type, .left-column h3:last-child {
+color: #000;
+}
+.right-column {
+width: 75%;
+float: right;
+       padding-top: 1em;
+}
+/* Large bullet point text */
+.large-points
+li
+p {
+  font-size: 26px;
+}
+</style>
+  </head>
+<!--
+
+
+    Functional Programming 
+
+    Definition (functions as first class objects, immutability & state)
+    Benefits (concurrency, readability, integrity)
+
+    Introduction to Java 8 FP language features
+
+    What is a Lambda?
+    The collections library
+
+    Examples: Using Predicates, Imperative looping to FP data flow implementation
+    References and resources to learn more about Java 8 and FP
+-->
+  <body>
+    <textarea id="source">
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+# Java 8 FP Principles
+An introduction to Functional Programming (FP) principles in Java 8
+???
+* This talk will briefly discuss some basic functional programming concepts and the new streaming API in Java 8
+---
+layout: false
+class: large-points
+.left-column[
+## Function First-Class
+]
+.right-column[
+###In FP, functions are a first-class construct just like an object, value or entity
+
+- Anonymous functions can be declared at run time
+
+- Functions can be passed in as parameters to other functions
+
+- Functions can return other functions!
+
+- Functions can be nested within one another
+]
+???
+* A programming language is said to have first-class functions if functions can be treated like any other object, value, or entity.
+
+* Anonymous functions are created at run time and are often referred to as Lambda's within programming languages
+
+* When functions are first-class they can be passed into other functions as parameters or as a return value.
+  * When a function returns another functions it's referred to as currying, which is outside the scope of this talk.
+
+* Functions can be nested within other functions to take advantage of lexical scoping of values of their enclosing parent function.
+  * An analogy is how class instance method has access to its classes instance members
+---
+class: large-points
+.left-column[
+## Function First-Class
+## Immutability & State
+]
+.right-column[
+###Immutable values are preferred to mutable variables in **pure** FP
+  
+  * AKA constants
+
+  * Benefits: inherently threadsafe, readability, easier to reason about, security
+
+  * Pure functions always return the same value given the same arguments
+
+  * Side effects
+
+  * Variables in Java are mutable by default
+]
+???
+* Immutable values can be thought of as constants in typical imperative languages
+
+* Benefits
+  * When a function has immutable state you can guarantee that a function will always work as expected in multi-threaded scenarios
+  * For the same reason it makes multithreading safe it also readability and reasoning easier because you can be certain no other code or threads can change its value for its lifetime
+  * Security, same reason as above.
+
+* In Pure functional programming languages all values are immutable and its not possible to change an existing values state
+  * Pure functions return the same value every time given the same input variables.
+
+* Pure functions are defined as functions that have no side effects
+  * They're like mathematical functions in that they always return the same value given the same arguments
+  * A side effect occurs when a function modifies some state that is observable outside of the function.
+  * For example: changing a global variable, a static variable, throwing an exception, or modify input arguments
+  * Limiting side effects reduces the possibility of unforeseen consequences to the rest of the system
+
+* Values in Java are mutable by default. 
+* Not all FP orientated languages are strict about immutability
+  * Some languages, like Scala, adopt a hybrid approach supporting both
+---
+class: large-points
+.left-column[
+## Parallelism
+]
+.right-column[
+###Since pure functions are inherently thread-safe, FP implementations can easily be run concurrently.
+* Race conditions
+
+* Divide & conquer
+
+  * Parallel processing 
+
+  * Distributed computing
+
+<br />
+<img src="hadoop-elephant.png" style="float:left;width:200px" />
+<img src="Sparkimage.png" style="float:left;width:300px" />
+]
+???
+* A race condition occurs when the output changes based on uncontrollable external events.
+  * In FP, race conditions are caused by multithreaded applications reading and **writing** the same mutable state
+  * Some of the most notoriously hard to find concurrency bugs are ultimately caused by mutable state shared between threads
+
+* Divide & conquer: Parallel processing is akin to the "divide and conquer"
+  * Parallel processing is the act of running a program on more than one processor core.
+    * This can enormously increase the speed of computational intensive operations
+    * Input is split up into atomic chunks that can be processed separately in different threads on different processor cores.
+    * When you utilize FP concepts like immutable state and first-class functions you can safely run functions in parallel with no side effects
+
+  * Distributed computing is the same as parallel processing, but zoomed out to a cluster of computers
+    * Inputs are split up and distributed to different computers over the network
+    * Each computer contain worker threads that further split up the input further
+    * Each worker thread runs your function over the data
+
+
+    * Apache Hadoop MapReduce and Apache Spark are examples of applications that allow you to massively parallelize work over commodity hardware.
+      * Performance can be increased by scaling out by adding more servers to a cluster
+      * Scaling out a cluster is more cost effective than scaling up individual servers
+      * *see next slide for hadoop cluster picture*
+---
+class: large-points
+.left-column[
+##Parallelism
+##Ex) Hadoop
+]
+.right-column[
+### Apache Hadoop YARN cluster
+<img src="yarn_architecture.gif" alt="YARN cluster" style="width: 100%"/>
+http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html
+]
+---
+# What is a Lambda?  λ
+
+Lambda's are a new syntax in Java 8 to create an anonymous function
+
+```java
+() -> println("Hello from lambda-land!");
+```
+
+They're comprised of arguments `()`, the "arrow" notation `->`, and a function body.
+
+Lambda's return a `Runnable` type.
+
+```java
+// Anonymous Runnable
+Runnable r1 = new Runnable(){
+  
+  @Override
+  public void run(){
+    System.out.println("Hello world one!");
+  }
+};
+
+// Lambda Runnable
+Runnable r2 = () -> System.out.println("Hello world two!");
+```
+???
+
+* Java 8 lambda's are syntactic sugar that allow you to replace verbose anonymous inner classes
+
+* Composition of a lambda
+  * They're comprised of optional arguments `()`, the "arrow" notation `->`, and a function body.
+  * Function body can optionally include braces if it's only one line.
+  * The function body can optionally return a value or nothing (void)
+
+* Runnable type
+---
+# Java 8 Streams API
+
+###A stream is *"a sequence of elements from a source that supports aggregate operations.”* 
+
+* Sequence of elements were each element is computed on demand
+
+* Source: Streams consume from a data-providing source such as collections, arrays, or I/O resources.
+
+* Aggregate operations such as filter, map, reduce, find, match, sorted, and so on. 
+
+### Pipelining
+
+* Stream/aggregate operations return streams themselves (method chaining)
+
+???
+* Sequence of elements: A stream provides an interface to a sequenced set of values of a specific element type. However, streams don’t actually store elements; they are computed on demand.
+
+* Source: Streams consume from a data-providing source such as collections, arrays, or I/O resources.
+
+* Aggregate operations: Streams support SQL-like operations and common operations from functional programing languages, such as filter, map, reduce, find, match, sorted, and so on. 
+
+* Pipelining: Stream operations return other streams using method chaining
+  * Operations can be added together to build larger pipelines
+---
+Example
+---
+# References
+
+Wikipedia pages
+* [Functional Programming](http://en.wikipedia.org/wiki/Functional_programming), [First-class functions](http://en.wikipedia.org/wiki/First-class_function), [Side effects](http://en.wikipedia.org/wiki/Side_effect_%28computer_science%29), [Immutable Object](http://en.wikipedia.org/wiki/Immutable_object), [Race Condition](http://en.wikipedia.org/wiki/Race_condition), [Parallel Processing](http://en.wikipedia.org/wiki/Parallel_processing)
+
+Oracle Docs
+* **[Processing Data with Java SE 8 Streams](http://www.oracle.com/technetwork/articles/java/ma14-java-se-8-streams-2177646.html)**
+* [Oracle Java 8 SE Lambda Quick Start](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/Lambda-QuickStart/index.html)
+* [Oracle Lambda expressions tutorial](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
+
+Courses
+* Functional programming principles in Scala
+
+Misc.
+* [Apache Hadoop NextGen MapReduce (YARN)](http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html)
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
