@@ -1,11 +1,13 @@
-# name-finder
+# Introduction to Functional Programming (FP) principles in Java 8
 
-## Assumptions
+## name-finder app
+
+### Assumptions
 
 * Names are case sensitive
 * Input file has one name per line with no space padding
 
-## Usage
+### Usage
 
 ```
 mvn package
