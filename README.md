@@ -1,13 +1,17 @@
 # Introduction to Functional Programming (FP) principles in Java 8
 
-## name-finder app
+## [Presentation](http://rawgit.com/seglo/java-8-fp/master/presentation/java8fp.html)
 
-### Assumptions
+## Examples
+
+### name-finder app
+
+#### Assumptions
 
 * Names are case sensitive
 * Input file has one name per line with no space padding
 
-### Usage
+#### Usage
 
 ```
 mvn package
