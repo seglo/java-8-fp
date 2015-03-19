@@ -7,7 +7,7 @@ import java.util.HashSet;
 public class App {
     public static void main(String[] args) throws Exception {
         if (args.length < 2) {
-            System.out.println("usage: java -cp name-finder.jar names.txt Name1 [, Name2, ... NameN]");
+            System.out.println("usage: java -cp java-8-fp.jar names.txt Name1 [, Name2, ... NameN]");
             System.exit(0);
         }
 

@@ -4,7 +4,18 @@
 
 ## Examples
 
+### Java 8 FP examples
+
+Located in `src/test/java/seglo`
+
+* `PredicateTests`
+* `PipeliningTests`
+
 ### name-finder app
+
+Example app using file as a source.
+
+`main()` in `src/main/java/seglo/App
 
 #### Assumptions
 
@@ -15,7 +26,7 @@
 
 ```
 mvn package
-java -cp target/name-finder-1.0-SNAPSHOT.jar seglo.App names.txt bob jane foo
+java -cp target/java-8-fp-1.0-SNAPSHOT.jar seglo.App names.txt bob jane foo
 ```
 
 ## Run Tests

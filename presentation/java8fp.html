@@ -157,25 +157,27 @@ class: large-points
 ## Function First-Class
 ]
 .right-column[
-###In FP, functions are a first-class construct just like an object, value or entity
+###In FP, functions are a first-class construct just like an object, variable, value or entity
 
 - Anonymous functions can be declared at run time
 
-- Functions can be passed in as parameters to other functions
+- Functions can be passed in as arguments to other functions
 
 - Functions can return other functions!
 
 - Functions can be nested within one another
 ]
 ???
-* A programming language is said to have first-class functions if functions can be treated like any other object, value, or entity.
+* A programming language is said to have first-class functions if functions can be treated like any other object, variable, value, or entity.
 
 * Anonymous functions are created at run time and are often referred to as Lambda's within programming languages
 
-* When functions are first-class they can be passed into other functions as parameters or as a return value.
-  * When a function returns another functions it's referred to as currying, which is outside the scope of this talk.
+* When functions are first-class they can be passed into other functions as arguments or as a return value.
+
+  * When a function returns another function it's referred to as currying, which is outside the scope of this talk.
 
 * Functions can be nested within other functions to take advantage of lexical scoping of values of their enclosing parent function.
+
   * An analogy is how class instance method has access to its classes instance members
 ---
 class: large-points
@@ -200,29 +202,38 @@ class: large-points
 * Immutable values can be thought of as constants in typical imperative languages
 
 * Benefits
-  * When a function has immutable state you can guarantee that a function will always work as expected in multi-threaded scenarios
-  * For the same reason it makes multithreading safe it also readability and reasoning easier because you can be certain no other code or threads can change its value for its lifetime
+  * When a function has immutable state you can guarantee that a function will always work without side effects in multi-threaded scenarios
+
+  * For the same reason it makes multithreading safe it also makes readability and reasoning easier because you can be certain no other code or threads can change its value while it's being executed
+
   * Security, same reason as above.
 
 * In Pure functional programming languages all values are immutable and its not possible to change an existing values state
-  * Pure functions return the same value every time given the same input variables.
+
+  * Pure functions return the same value every time given the same input arguments.
 
 * Pure functions are defined as functions that have no side effects
+
   * They're like mathematical functions in that they always return the same value given the same arguments
-  * A side effect occurs when a function modifies some state that is observable outside of the function.
-  * For example: changing a global variable, a static variable, throwing an exception, or modify input arguments
+
+* A side effect occurs when a function modifies some state that is observable outside of the function.
+
+  * For example: changing a global variable, a static variable, throwing an exception, or modifying input arguments
+
   * Limiting side effects reduces the possibility of unforeseen consequences to the rest of the system
 
-* Values in Java are mutable by default. 
+* Variables in Java are mutable by default.
+
 * Not all FP orientated languages are strict about immutability
-  * Some languages, like Scala, adopt a hybrid approach supporting both
+
+  * Some languages, like Scala, adopt a hybrid approach supporting both mutable variables and immutable values
 ---
 class: large-points
 .left-column[
 ## Parallelism
 ]
 .right-column[
-###Since pure functions are inherently thread-safe, FP implementations can easily be run concurrently.
+###Since pure functions are inherently thread-safe, FP implementations can easily be run in parallel.
 * Race conditions
 
 * Divide & conquer
@@ -237,24 +248,36 @@ class: large-points
 ]
 ???
 * A race condition occurs when the output changes based on uncontrollable external events.
+
   * In FP, race conditions are caused by multithreaded applications reading and **writing** the same mutable state
+
   * Some of the most notoriously hard to find concurrency bugs are ultimately caused by mutable state shared between threads
 
 * Divide & conquer: Parallel processing is akin to the "divide and conquer"
+
   * Parallel processing is the act of running a program on more than one processor core.
+
     * This can enormously increase the speed of computational intensive operations
+
     * Input is split up into atomic chunks that can be processed separately in different threads on different processor cores.
+
     * When you utilize FP concepts like immutable state and first-class functions you can safely run functions in parallel with no side effects
 
   * Distributed computing is the same as parallel processing, but zoomed out to a cluster of computers
+
     * Inputs are split up and distributed to different computers over the network
+
     * Each computer contain worker threads that further split up the input further
+
     * Each worker thread runs your function over the data
 
 
     * Apache Hadoop MapReduce and Apache Spark are examples of applications that allow you to massively parallelize work over commodity hardware.
+
       * Performance can be increased by scaling out by adding more servers to a cluster
+
       * Scaling out a cluster is more cost effective than scaling up individual servers
+
       * *see next slide for hadoop cluster picture*
 ---
 class: large-points
@@ -298,17 +321,22 @@ Runnable r2 = () -> System.out.println("Hello world two!");
 * Java 8 lambda's are syntactic sugar that allow you to replace verbose anonymous inner classes
 
 * Composition of a lambda
+
   * They're comprised of optional arguments `()`, the "arrow" notation `->`, and a function body.
+
   * Function body can optionally include braces if it's only one line.
+
   * The function body can optionally return a value or nothing (void)
 
 * Runnable type
+
+* Other common use cases for lambda's: async/Futures, callbacks
 ---
 # Java 8 Streams API
 
 ###A stream is *"a sequence of elements from a source that supports aggregate operations.”* 
 
-* Sequence of elements were each element is computed on demand
+* A sequence of elements where each element is computed on demand
 
 * Source: Streams consume from a data-providing source such as collections, arrays, or I/O resources.
 
@@ -323,12 +351,88 @@ Runnable r2 = () -> System.out.println("Hello world two!");
 
 * Source: Streams consume from a data-providing source such as collections, arrays, or I/O resources.
 
-* Aggregate operations: Streams support SQL-like operations and common operations from functional programing languages, such as filter, map, reduce, find, match, sorted, and so on. 
+* Aggregate operations: Streams support SQL-like operations and common operations from functional programing languages, such as filter, map, reduce, find, match, sorted (comparators), and so on. 
 
 * Pipelining: Stream operations return other streams using method chaining
+
   * Operations can be added together to build larger pipelines
 ---
-Example
+# Stream API Examples
+
+## Predicate
+
+A predicate is a special kind of function that returns a boolean based on an input value. A lambda that returns a boolean can be cast to the `Predicate<T>` interface.
+
+```java
+Predicate<Integer> evenNumPredicate = num -> num % 2 == 0;
+```
+
+There are several Streams API operations that use predicates: `allMatch`, `anyMatch`, `filter`.
+
+Ex) Assert that all numbers in a given list are less than 11
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+boolean allNumbersLessThanEleven = numbers.stream()
+                .allMatch(number -> number < 11);
+
+assertEquals(allNumbersLessThanEleven, true);
+```
+
+???
+
+* A predicate is a special kind of function which returns a boolean value given an input argument
+
+* A lambda can be associated to the Predicate type when it returns a boolean.
+
+* Predicates are useful when truth values over an entire stream, 
+
+  * for example to see if all elements in a stream pass a condition (allmatch), if they do then return true
+
+  * anyMatch will return true if any element is true given a Predicate
+
+  * filter returns a new stream of elements of the same type that satisfy a given Predicate
+---
+# Stream Pipelining Example
+
+Pipelining is a common action for transforming a dataset using filters, map, and reduce/aggregation operations.
+
+Ex) Limit first 2 squares of even numbers.  Before pipeline.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+List<Integer> twoEvenSquares = numbers.stream() // .parallelStream
+                .filter(n -> n % 2 == 0) // predicate
+                .map(n -> n * n)         // transform
+                .limit(2)
+                .collect(Collectors.toList());
+
+assertEquals(twoEvenSquares.size(), 2);
+assertArrayEquals(new Integer[]{4, 16}, twoEvenSquares.toArray());
+```
+---
+# Without Pipelining
+
+An equivalent implementation without the Stream API
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+
+List<Integer> twoEvenSquares = new ArrayList<Integer>();
+for(int i = 0; i < numbers.size(); i++) {
+    Integer num = numbers.get(i);
+
+    if (num % 2 != 0)
+        continue;
+
+    twoEvenSquares.add(num*num);
+
+    if (twoEvenSquares.size() == 2)
+        break;
+}
+
+assertEquals(twoEvenSquares.size(), 2);
+assertArrayEquals(new Integer[]{4, 16}, twoEvenSquares.toArray());
+```
 ---
 # References
 
@@ -339,9 +443,10 @@ Oracle Docs
 * **[Processing Data with Java SE 8 Streams](http://www.oracle.com/technetwork/articles/java/ma14-java-se-8-streams-2177646.html)**
 * [Oracle Java 8 SE Lambda Quick Start](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/Lambda-QuickStart/index.html)
 * [Oracle Lambda expressions tutorial](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
+* [Parallelism](http://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html)
 
 Courses
-* Functional programming principles in Scala
+* [Functional Programming Principles in Scala](https://www.coursera.org/course/progfun)
 
 Misc.
 * [Apache Hadoop NextGen MapReduce (YARN)](http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html)

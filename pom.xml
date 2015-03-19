@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>seglo</groupId>
-    <artifactId>name-finder</artifactId>
+    <artifactId>java-8-fp</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>name-finder</name>
+    <name>java-8-fp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
