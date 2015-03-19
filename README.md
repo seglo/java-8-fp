@@ -15,7 +15,7 @@ Located in `src/test/java/seglo`
 
 Example app using file as a source.
 
-`main()` in `src/main/java/seglo/App
+`main()` in `src/main/java/seglo/App`
 
 #### Assumptions
 
