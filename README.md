@@ -2,6 +2,8 @@
 
 ## [Presentation](http://rawgit.com/seglo/java-8-fp/master/presentation/java8fp.html)
 
+Type `p` in presentation to see notes.
+
 ## Examples
 
 ### Java 8 FP examples
